@@ -1,27 +1,20 @@
 ﻿#include"Header.h"
-unsigned int checkTime;
 
-class Levels
-{
-	public:
-		void Random(char* brr, int n)
-		{
-			srand(time(NULL));
-			for (int i = 0; i < n; i++) {
-				i % 8 == 0 && i != 0 ? *(brr + i) = char(32) : *(brr + i) = char(rand() % 25 + 65); // ASCII + Space int arr
-			}
-		}
-};
+unsigned int checkTime;
 
 void main()
 {
 	short int cursor = Menu();
-	int n = 24;
+	const int n = 5;
 	char* arr = new char[n];
 	char* brr = new char[n];
 	short int mistakes = 0, correct = 0;
 
-	brr.Random(brr, n);
+	for (int i = 0; i < n; i++)
+	{
+		i % 8 == 4 && i > 0 ? brr[i] = ' ' : brr[i] = (rand() % 26 + 65); // Random
+	}
+
 	if (cursor == 0)Game(n, brr, arr, mistakes, correct);
 	else if (cursor == 4)exit(0);
 
@@ -36,29 +29,30 @@ void main()
 void Game(int n, char* brr, char* arr, short int& mistakes, short int& correct)
 {
 	Print(brr, n);
-	short int cin;
+	short int _cin;
 	unsigned int start = clock();
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n - 1; i++)
 	{
-		cin = _getch();
-		if (cin == 8)
+		_cin = _getch();
+
+		if (_cin == 8 && i != 0)    // if enter backspace
 		{
-			system("cls");
-			i--;
-			Print(brr, n);
-			for (int j = 0; j < i; j++)
+			system("cls");  
+			Print(brr, n);		
+			for (int j = 0; j < i - 1; j++)
 			{
-				arr[j] == brr[j] ? setColor(Green) : setColor(Red);
-				std::cout << arr[j];
+				arr[j] == brr[j] ? setColor(Green) : setColor(Red);   // save color in console
+				std::cout << arr[j];      // print brr with size - 1
 			}
-			gotoxy(i, 3);
-			i--; continue;
+			gotoxy(i - 1, 3);  // set line
+			i-= 2;
+			continue;
 		}
-		else if ((cin < 32 || cin > 90) || (cin > 32 && cin < 65))
+		else if ((_cin < 65 || _cin > 90)  &&  _cin != 32 ) 
 		{
 			i--; continue;
 		}
-		*(arr + i) = char(cin);
+		*(arr + i) = char(_cin);
 		arr[i] == brr[i] ? (setColor(Green), correct++) : (setColor(Red), mistakes++);
 		std::cout << arr[i];
 	}
@@ -66,6 +60,7 @@ void Game(int n, char* brr, char* arr, short int& mistakes, short int& correct)
 	unsigned int time = end - start;
 	checkTime = time;
 	setColor(White);
+	return;
 }
 void gotoxy(short int x, short int y)
 {
@@ -105,8 +100,12 @@ void Print(char* brr, int n)
 {
 	setColor(White);
 	std::cout << std::endl;
-	for (int i = 0; i < n; i++) {	
+	for (int i = 0; i < n; i++)  {
+
 		std::cout << *(brr + i);
 	}
+
 	std::cout << std::endl << std::endl;
 }
+
+
